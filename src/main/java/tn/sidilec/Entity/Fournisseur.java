@@ -1,21 +1,23 @@
 package tn.sidilec.Entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
+@Setter
 
+@NoArgsConstructor
+@ToString // ✅ Lombok génère toString(), mais sans les produits
 public class Fournisseur {
-	@Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idFournisseur;
 
@@ -23,7 +25,11 @@ public class Fournisseur {
     private String email;
     private String adresse;
     private String telephone;
-    
+
+    @OneToMany(mappedBy = "fournisseur", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore // ✅ Évite la récursion infinie
+    @ToString.Exclude // ✅ Exclut la liste des produits du `toString()`
+    private List<Produit> produits = new ArrayList<>();
+}
     
 
-}
