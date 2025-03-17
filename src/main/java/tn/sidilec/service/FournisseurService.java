@@ -30,6 +30,7 @@ public class FournisseurService {
     public Fournisseur updateFournisseur(Long id, Fournisseur fournisseurDetails) {
         Fournisseur fournisseur = fournisseurRepository.findById(id).orElseThrow(() -> new RuntimeException("Fournisseur non trouvé"));
         fournisseur.setNomFournisseur(fournisseurDetails.getNomFournisseur());
+        fournisseur.setCertificat(fournisseurDetails.getCertificat());
         fournisseur.setEmail(fournisseurDetails.getEmail());
         fournisseur.setAdresse(fournisseurDetails.getAdresse());
         fournisseur.setTelephone(fournisseurDetails.getTelephone());

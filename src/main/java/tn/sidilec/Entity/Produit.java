@@ -23,9 +23,10 @@ public class Produit {
 
     private String reference;
     private String nom;
-    private String description;
-    private double prix;
+    //private String description;
+    //private double prix;
     private String imagePath;
+    private String ficheTechniquePath;
 
     @ManyToOne
     @JoinColumn(name = "fournisseur_id", nullable = false)
@@ -35,4 +36,8 @@ public class Produit {
 
     @OneToMany(mappedBy = "produit", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Caracteristique> caracteristiques = new ArrayList<>();
+    
+    @ManyToOne
+    @JoinColumn(name = "famille_id")
+    private Famille famille;
 }

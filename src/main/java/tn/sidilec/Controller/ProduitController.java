@@ -35,8 +35,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import tn.sidilec.Entity.Caracteristique;
+import tn.sidilec.Entity.Famille;
 import tn.sidilec.Entity.Fournisseur;
 import tn.sidilec.Entity.Produit;
+import tn.sidilec.Repository.FamilleRepository;
 import tn.sidilec.Repository.FournisseurRepository;
 import tn.sidilec.service.ProduitService;
 
@@ -48,6 +50,9 @@ public class ProduitController {
     private ProduitService produitService;
     @Autowired
     private FournisseurRepository fournisseurRepository;
+    @Autowired
+    private FamilleRepository familleRepository;
+    private final String UPLOAD_DIR = "src/main/resources/static/fiche_technique/";
 
     @GetMapping("/all")
     public List<Produit> getAllProduits() {
@@ -58,28 +63,48 @@ public class ProduitController {
     public ResponseEntity<?> addProduit(@RequestBody Produit produit) {
         System.out.println("Produit reçu par le backend : " + produit);
 
+        // Vérifier si le fournisseur est présent et son ID
         if (produit.getFournisseur() == null || produit.getFournisseur().getIdFournisseur() == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : Le fournisseur est null ou son ID est manquant !");
         }
 
         // Vérifier l'existence du fournisseur
         Optional<Fournisseur> fournisseurOpt = fournisseurRepository.findById(produit.getFournisseur().getIdFournisseur());
-
         if (!fournisseurOpt.isPresent()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Erreur : Le fournisseur avec ID " + produit.getFournisseur().getIdFournisseur() + " n'existe pas.");
         }
 
-        produit.setFournisseur(fournisseurOpt.get()); // Associer le fournisseur trouvé au produit
+        // Associer le fournisseur trouvé au produit
+        produit.setFournisseur(fournisseurOpt.get());
+
+        // Vérifier si la famille est présente et son ID
+        if (produit.getFamille() == null || produit.getFamille().getIdFamille() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : La famille est null ou son ID est manquant !");
+        }
+
+        // Vérifier l'existence de la famille
+        Optional<Famille> familleOpt = familleRepository.findById(produit.getFamille().getIdFamille());
+        if (!familleOpt.isPresent()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Erreur : La famille avec ID " + produit.getFamille().getIdFamille() + " n'existe pas.");
+        }
+
+        // Associer la famille trouvée au produit
+        produit.setFamille(familleOpt.get());
 
         // Associer les caractéristiques au produit
         for (Caracteristique caracteristique : produit.getCaracteristiques()) {
             caracteristique.setProduit(produit);
         }
 
+        // Sauvegarder le produit
         Produit savedProduit = produitService.ajouterProduit(produit);
+
+        // Retourner le produit sauvegardé
         return ResponseEntity.ok(savedProduit);
     }
+
 
     @GetMapping("/fournisseur/{id}")
     public List<Produit> getProduitsByFournisseur(@PathVariable Long id) {
@@ -138,8 +163,56 @@ public class ProduitController {
         }
     }
     
-    
+    //Upload d'une fiche technique
+    @PostMapping("/uploadFicheTechnique")
+    public ResponseEntity<Map<String, String>> uploadFicheTechnique(@RequestParam("file") MultipartFile file) {
+        try {
+            if (file.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Collections.singletonMap("error", "Le fichier est vide"));
+            }
+            
+            // Vérifier et créer le répertoire s'il n'existe pas
+            Path uploadPath = Paths.get(UPLOAD_DIR);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+            
+            String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+            Path filePath = uploadPath.resolve(fileName);
+            
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
+            String ficheTechniquePath = "/fiche_technique/" + fileName;
+            
+            Map<String, String> response = new HashMap<>();
+            response.put("ficheTechniquePath", ficheTechniquePath);
+            
+            return ResponseEntity.ok(response);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonMap("error", "Échec de l'upload : " + e.getMessage()));
+        }
+    }
+    
+    @GetMapping("/ficheTechnique/{filename:.+}")
+    public ResponseEntity<Resource> getFicheTechnique(@PathVariable String filename) {
+        try {
+            Path filePath = Paths.get(UPLOAD_DIR).resolve(filename);
+            Resource resource = new UrlResource(filePath.toUri());
+
+            if (resource.exists() || resource.isReadable()) {
+                return ResponseEntity.ok()
+                        .contentType(MediaType.APPLICATION_PDF)
+                        .body(resource);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (MalformedURLException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(null);
+        }
+    }
 
 
 }

@@ -22,6 +22,7 @@ public class Fournisseur {
     private Long idFournisseur;
 
     private String nomFournisseur;
+    private String certificat;
     private String email;
     private String adresse;
     private String telephone;
