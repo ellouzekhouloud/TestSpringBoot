@@ -25,6 +25,7 @@ public class Caracteristique {
 
 	private String nom;
 	private String valeur;
+	private String tolerance;
 
 	@ManyToOne
 	@JoinColumn(name = "produit_id", nullable = false)

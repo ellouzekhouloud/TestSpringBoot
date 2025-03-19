@@ -1,5 +1,8 @@
 package tn.sidilec.Entity;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,10 +17,30 @@ public class Personnel {
 
     private String nom;
     private String prenom;
+    @Column(unique = true, nullable = false)
+    private String matricule;
+    private String qualifications;
+    
+    @Column(unique = true, nullable = false)
     private String email;
-    private String adresse;
-    private String telephone;
-    private String poste;
+  
+    @Column(nullable = false)
+    private String motDePasse;
+    
+
+    // Constructeur par défaut
+    public Personnel() {
+    }
+
+    // Constructeur avec paramètres
+    public Personnel(String nom, String prenom, String matricule, String qualifications, String email, String motDePasse) {
+        this.nom = nom;
+        this.prenom = prenom;
+        this.matricule = matricule;
+        this.qualifications = qualifications;
+        this.email = email;
+        this.motDePasse = new BCryptPasswordEncoder().encode(motDePasse); // Encodage du mot de passe
+    }
 
     // Getters et setters
     public Long getId() {
@@ -52,28 +75,30 @@ public class Personnel {
         this.email = email;
     }
 
-    public String getAdresse() {
-        return adresse;
-    }
+    
 
-    public void setAdresse(String adresse) {
-        this.adresse = adresse;
-    }
+	public String getMatricule() {
+		return matricule;
+	}
 
-    public String getTelephone() {
-        return telephone;
-    }
+	public void setMatricule(String matricule) {
+		this.matricule = matricule;
+	}
 
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
-    }
+	public String getMotDePasse() {
+		return motDePasse;
+	}
 
-    public String getPoste() {
-        return poste;
-    }
+	public void setMotDePasse(String motDePasse) {
+		this.motDePasse = motDePasse;
+	}
 
-    public void setPoste(String poste) {
-        this.poste = poste;
-    }
+	public String getQualifications() {
+		return qualifications;
+	}
+
+	public void setQualifications(String qualifications) {
+		this.qualifications = qualifications;
+	}
 
 }
