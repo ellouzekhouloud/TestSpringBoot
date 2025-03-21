@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import tn.sidilec.Entity.Caracteristique;
+
 import tn.sidilec.Entity.Famille;
 import tn.sidilec.Entity.Fournisseur;
 import tn.sidilec.Entity.Produit;
@@ -93,10 +93,7 @@ public class ProduitController {
         // Associer la famille trouvée au produit
         produit.setFamille(familleOpt.get());
 
-        // Associer les caractéristiques au produit
-        for (Caracteristique caracteristique : produit.getCaracteristiques()) {
-            caracteristique.setProduit(produit);
-        }
+        
 
         // Sauvegarder le produit
         Produit savedProduit = produitService.ajouterProduit(produit);
