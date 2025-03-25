@@ -129,7 +129,7 @@ public class ProduitController {
 
             String imagePath = "/images/" + fileName;
             
-            // ✅ Log pour voir la réponse
+           
             System.out.println("Image Path: " + imagePath);
             
             // ✅ Retourner un JSON valide
