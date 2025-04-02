@@ -1,10 +1,11 @@
 package tn.sidilec.Entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PlanDeControleRequest {
 	private Long idProduit;
-    private List<PlanDeControle> lignes;
+	private List<PlanDeControle> lignes = new ArrayList<>();
 
     
     public Long getIdProduit() {

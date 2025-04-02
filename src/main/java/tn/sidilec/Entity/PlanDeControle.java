@@ -29,4 +29,6 @@ public class PlanDeControle {
     @ManyToOne
     @JoinColumn(name = "produit_id", nullable = false)
     private Produit produit;
+    
+ 
 }

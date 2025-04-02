@@ -37,9 +37,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import tn.sidilec.Entity.Famille;
 import tn.sidilec.Entity.Fournisseur;
+import tn.sidilec.Entity.PlanDeControle;
 import tn.sidilec.Entity.Produit;
 import tn.sidilec.Repository.FamilleRepository;
 import tn.sidilec.Repository.FournisseurRepository;
+import tn.sidilec.Repository.ProduitRepository;
 import tn.sidilec.service.ProduitService;
 
 @RestController
@@ -52,6 +54,9 @@ public class ProduitController {
     private FournisseurRepository fournisseurRepository;
     @Autowired
     private FamilleRepository familleRepository;
+
+    @Autowired
+    private ProduitRepository produitRepository;
     private final String UPLOAD_DIR = "src/main/resources/static/fiche_technique/";
 
     @GetMapping("/all")
@@ -111,6 +116,28 @@ public class ProduitController {
     @GetMapping("/{id}")
     public Optional<Produit> getProduitById(@PathVariable Long id) {
         return produitService.getProduitById(id);
+    }
+    
+    @GetMapping("/reference/{reference}")
+    public ResponseEntity<Produit> getProduitByReference(@PathVariable String reference) {
+        Optional<Produit> produitOpt = produitRepository.findByReference(reference);
+        if (produitOpt.isPresent()) {
+            Produit produit = produitOpt.get();
+            // Récupérer le produit avec ses plans de contrôle associés
+            return ResponseEntity.ok(produit);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+    @GetMapping("/{idProduit}/plansDeControle")
+    public ResponseEntity<List<PlanDeControle>> getPlansDeControleByProduit(@PathVariable Long idProduit) {
+        Optional<Produit> produitOpt = produitRepository.findById(idProduit);
+        if (produitOpt.isPresent()) {
+            List<PlanDeControle> plansDeControle = produitOpt.get().getPlansDeControle();
+            return ResponseEntity.ok(plansDeControle);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
     @DeleteMapping("/delete/{id}")

@@ -49,6 +49,7 @@ public class SecurityConfig {
                             "/api/produits/uploadFicheTechnique", "/api/produits/uploads/{filename:.+}",
                             "/api/produits/ficheTechnique/{filename:.+}",
                             "/images/**","/fiche_technique/**" ).permitAll()
+            	
                 .anyRequest().authenticated()
             )
             .userDetailsService(customUserDetailsService)
