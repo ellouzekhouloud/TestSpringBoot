@@ -22,6 +22,10 @@ public class BLProduit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 	private int quantite;
+	private String status;
+	private boolean controleTermine ;
+	private boolean isControle = false;
+	private boolean controleEffectue;
 	
 	@ManyToOne
     @JoinColumn(name = "bl_id", nullable = false)
@@ -31,4 +35,5 @@ public class BLProduit {
     @ManyToOne
     @JoinColumn(name = "produit_id", nullable = false)
     private Produit produit;
+    
 }

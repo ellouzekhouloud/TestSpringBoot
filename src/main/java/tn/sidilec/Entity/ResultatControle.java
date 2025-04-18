@@ -13,6 +13,9 @@ public class ResultatControle {
 
     private String valeurMesuree; // Null si contrôle visuel
     private String visuel; // Null si c'est une mesure
+    
+   
+    
 
     @ManyToOne
     @JoinColumn(name = "plan_controle_id", nullable = false)

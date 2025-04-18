@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -32,7 +34,10 @@ public class BL {
     private String reference; 
     private String referenceInterne; 
     private String description; 
+    private boolean termine = false;
     
+    @Enumerated(EnumType.STRING)
+    private BLStatus status = BLStatus.PRET;  // ✅ Status par défaut
     
     @ManyToOne
     @JoinColumn(name = "id_fournisseur", nullable = false)

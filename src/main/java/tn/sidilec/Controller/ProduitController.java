@@ -139,6 +139,17 @@ public class ProduitController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
+    
+    @GetMapping("/{reference}/plan-de-controle")
+    public ResponseEntity<List<PlanDeControle>> getPlanDeControleByReference(@PathVariable String reference) {
+      Optional   <Produit> produitOpt = produitRepository.findByReference(reference);
+      if (produitOpt.isPresent()) {
+          List<PlanDeControle> plansDeControle = produitOpt.get().getPlansDeControle();
+          return ResponseEntity.ok(plansDeControle);
+      } else {
+          return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+      }
+    }
 
     @DeleteMapping("/delete/{id}")
     public void supprimerProduit(@PathVariable Long id) {
