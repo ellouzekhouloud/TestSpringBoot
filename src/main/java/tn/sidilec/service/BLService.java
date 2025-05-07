@@ -8,15 +8,18 @@ import tn.sidilec.Entity.BLProduit;
 import tn.sidilec.Entity.BLRequest;
 import tn.sidilec.Entity.BLStatus;
 import tn.sidilec.Entity.Fournisseur;
+import tn.sidilec.Entity.Notification;
 import tn.sidilec.Entity.Produit;
 import tn.sidilec.Entity.ProduitRequest;
 import tn.sidilec.Repository.BLProduitRepository;
 import tn.sidilec.Repository.BLRepository;
 import tn.sidilec.Repository.FournisseurRepository;
+import tn.sidilec.Repository.NotificationRepository;
 import tn.sidilec.Repository.ProduitRepository;
 import tn.sidilec.dto.BLProduitDto;
 import tn.sidilec.dto.ProduitDTO;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import java.util.List;
@@ -35,6 +38,10 @@ public class BLService {
     private ProduitRepository produitRepository;
     @Autowired
     private BLProduitRepository blProduitRepository;
+    @Autowired
+    private NotificationRepository notificationRepository;
+    @Autowired
+    private WebSocketNotificationService wsNotificationService;
 
     public BL createBL(BLRequest blRequest) {
         // Récupération du fournisseur
@@ -68,7 +75,20 @@ public class BLService {
         bl.setProduits(produits);
 
        
-        return blRepository.save(bl);
+        BL savedBL = blRepository.save(bl);
+
+        // ✅ Création de la notification pour le contrôleur
+        Notification notif = new Notification();
+        notif.setMessage("Nouveau bon de livraison à contrôler : " + savedBL.getNumBL());
+        notif.setBl(savedBL);
+        notif.setRole("CONTROLEUR");
+        notif.setRead(false);
+        notif.setTimestamp(LocalDateTime.now());
+        notificationRepository.save(notif);
+     // ✅ ENVOI TEMPS RÉEL via WebSocket
+        wsNotificationService.notifyControleurs(notif.getMessage());
+
+        return savedBL;
     }
     
     

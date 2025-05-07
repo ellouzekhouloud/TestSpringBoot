@@ -71,6 +71,6 @@ public class ControleController {
     public List<Controle> getTousLesControles() {
         return controleService.getControles();
     }
-
     
+   
 }

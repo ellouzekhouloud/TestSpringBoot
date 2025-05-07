@@ -19,6 +19,7 @@ import tn.sidilec.Entity.BL;
 import tn.sidilec.Entity.BLProduit;
 import tn.sidilec.Entity.BLRequest;
 import tn.sidilec.Entity.BLStatus;
+
 import tn.sidilec.Repository.BLProduitRepository;
 import tn.sidilec.Repository.BLRepository;
 import tn.sidilec.dto.BLProduitDto;
@@ -27,6 +28,7 @@ import tn.sidilec.service.BLService;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/bl")
@@ -152,6 +154,22 @@ public class BLController {
         } else {
             return ResponseEntity.notFound().build(); 
         }
+    }
+    
+    @GetMapping("/{blId}/produits-controles-details")
+    public List<String> getProduitsControles(@PathVariable Long blId) {
+        // Log pour vérifier que l'ID de BL est correct
+        System.out.println("Récupération des produits contrôlés pour le BL ID : " + blId);
+
+        List<BLProduit> blProduits = bLProduitRepository.findByBlIdAndIsControleTrue(blId);
+        
+        // Log pour vérifier le nombre de produits récupérés
+        System.out.println("Nombre de produits contrôlés trouvés : " + blProduits.size());
+
+        // Retourner une liste des références des produits
+        return blProduits.stream()
+                .map(blProduit -> blProduit.getProduit().getReference())  // Récupérer la référence du produit
+                .collect(Collectors.toList());
     }
     
     @GetMapping

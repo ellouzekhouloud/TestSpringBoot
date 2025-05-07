@@ -27,6 +27,7 @@ public class Personnel {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
+    private String fcmToken; // Ajoute le token FCM
 
    
     public Personnel() {}
@@ -38,9 +39,11 @@ public class Personnel {
         this.matricule = matricule;
         this.qualifications = qualifications;
         this.email = email;
-        this.motDePasse = new BCryptPasswordEncoder().encode(motDePasse);
+        this.motDePasse = motDePasse;
         this.role = role;
     }
+    
+   
 
    
     public Long getId() { return id; }

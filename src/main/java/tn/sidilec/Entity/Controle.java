@@ -6,6 +6,10 @@ import lombok.Setter;
 import lombok.ToString;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+
+
 
 @Entity
 @Getter
@@ -26,12 +30,16 @@ public class Controle {
     
     private Integer quantite; // Quantité mesurée
     private String quantiteStatus; // Status de la quantité : "valid" ou "invalid"
+    private Integer quantiteIncorrecte;
 
     @ManyToOne
     @JoinColumn(name = "produit_id")
+    
     private Produit produit;
 
     @OneToMany(mappedBy = "controle", cascade = CascadeType.ALL)
+   
+    @JsonIgnoreProperties("controle") // Ignore la propriété "controle" dans ResultatControle lors de la sérialisation
     private List<ResultatControle> resultatsControle;
    
    

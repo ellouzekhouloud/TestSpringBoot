@@ -113,7 +113,16 @@
 			<scope>test</scope>
 		</dependency>
 
+<dependency>
+  <groupId>com.google.firebase</groupId>
+  <artifactId>firebase-admin</artifactId>
+  <version>9.2.0</version> <!-- vérifie la dernière version -->
+</dependency>
 
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-websocket</artifactId>
+</dependency>
 	</dependencies>
 
 	<build>

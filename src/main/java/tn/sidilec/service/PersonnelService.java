@@ -51,7 +51,7 @@ public class PersonnelService {
         personnel.setEmail(personnelDetails.getEmail());
         personnel.setMatricule(personnelDetails.getMatricule());
         personnel.setQualifications(personnelDetails.getQualifications());
-        personnel.setRole(personnelDetails.getRole());
+        //personnel.setRole(personnelDetails.getRole());
 
         if (personnelDetails.getMotDePasse() != null && !personnelDetails.getMotDePasse().isEmpty()) {
             personnel.setMotDePasse(passwordEncoder.encode(personnelDetails.getMotDePasse()));

@@ -11,4 +11,5 @@ import tn.sidilec.Entity.Personnel;
 public interface PersonnelRepository extends JpaRepository<Personnel, Long> {
 	Optional<Personnel> findByMatricule(String matricule);
 	Optional<Personnel> findByEmail(String email);
+	Optional<Personnel> findByNom(String nom);
 }

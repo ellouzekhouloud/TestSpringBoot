@@ -23,4 +23,8 @@ public class FamilleService {
     public Famille addFamille(Famille famille) {
         return familleRepository.save(famille);
     }
+    
+    public void deleteFamille(Long idFamille) {
+        familleRepository.deleteById(idFamille);
+    }
 }

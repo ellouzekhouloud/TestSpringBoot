@@ -54,6 +54,7 @@ public class AuthController {
             response.put("nom", personnel.get().getNom());
             response.put("accessToken", accessToken);  // Ajouter le JWT dans la réponse
             response.put("refreshToken", refreshToken); // Ajouter le refresh token dans la réponse
+            response.put("personnelId", String.valueOf(personnel.get().getId()));
 
             return ResponseEntity.ok(response);
         } else {

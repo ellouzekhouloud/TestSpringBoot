@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -75,5 +76,12 @@ public class PersonnelController {
     @DeleteMapping("/{id}")
     public void deletePersonnel(@PathVariable Long id) {
         personnelService.deletePersonnel(id);
+    }
+    
+    @GetMapping("/personne/{nom}")
+    public ResponseEntity<Personnel> getPersonnelByNom(@PathVariable String nom) {
+        Personnel personnel = personnelRepository.findByNom(nom)
+                    .orElseThrow(() -> new RuntimeException("Personnel non trouvé"));
+        return ResponseEntity.ok(personnel);
     }
 }
