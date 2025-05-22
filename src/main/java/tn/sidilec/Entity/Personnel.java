@@ -27,7 +27,18 @@ public class Personnel {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
-    private String fcmToken; // Ajoute le token FCM
+    
+    private boolean isActive = true;
+    
+    public boolean isActive() {
+		return isActive;
+	}
+
+
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
+	}
+	private String fcmToken; // Ajoute le token FCM
 
    
     public Personnel() {}

@@ -23,5 +23,25 @@ public interface BLProduitRepository extends JpaRepository<BLProduit, Long> {
 	List<BLProduit> findByBlId(@Param("blId") Long blId);
 	
 	List<BLProduit> findByBlIdAndIsControleTrue(Long blId);
+	
+	
 
+    //PPm : fiche de refus :
+    @Query("""
+    	    SELECT COUNT(f) 
+    	    FROM FicheDeRefus f
+    	    WHERE f.fournisseur = :nomFournisseur
+    	""")
+    	Long countFichesDeRefusByFournisseur(@Param("nomFournisseur") String nomFournisseur);
+
+    //PPm : etiquette 
+    @Query("""
+    	    SELECT COUNT(e)
+    	    FROM EtiquetteVerte e
+    	    WHERE e.fournisseur = :nomFournisseur
+    	""")
+    	Long countEtiquettesVertesByFournisseur(@Param("nomFournisseur") String nomFournisseur);
+    
+    
+  
 }

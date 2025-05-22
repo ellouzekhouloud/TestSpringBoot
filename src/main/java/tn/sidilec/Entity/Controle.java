@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.time.LocalDate;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -25,7 +27,7 @@ public class Controle {
     private String fournisseur;
     private String verificateur;
     private String numBL;
-    private String dateDeControle;
+    private LocalDate dateDeControle;
     private String raisonRefus;
     
     private Integer quantite; // Quantité mesurée

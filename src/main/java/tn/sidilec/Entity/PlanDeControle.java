@@ -1,11 +1,17 @@
 package tn.sidilec.Entity;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -29,6 +35,8 @@ public class PlanDeControle {
     @ManyToOne
     @JoinColumn(name = "produit_id", nullable = false)
     private Produit produit;
-    
+    @OneToMany(mappedBy = "planDeControle", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("planDeControle")
+    private List<ResultatControle> resultatsControle;
  
 }

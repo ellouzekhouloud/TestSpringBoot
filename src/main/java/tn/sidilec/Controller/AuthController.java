@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
 import tn.sidilec.Entity.Personnel;
 import tn.sidilec.Entity.Role;
 import tn.sidilec.Repository.PersonnelRepository;
@@ -45,6 +46,13 @@ public class AuthController {
         Optional<Personnel> personnel = authService.authenticate(email, motDePasse);
 
         if (personnel.isPresent()) {
+        	
+        	// 🔒 Vérification si le compte est désactivé
+            if (!personnel.get().isActive()) {
+            	Map<String, String> response = new HashMap<>();
+            	response.put("message", "Votre compte a été désactivé. Veuillez contacter l'administrateur.");
+            	return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+            }
             String accessToken = jwtService.generateAccessToken(email, personnel.get().getNom());
             String refreshToken = jwtService.generateRefreshToken(email); // Générer le refresh token
 

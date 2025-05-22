@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -83,5 +84,19 @@ public class PersonnelController {
         Personnel personnel = personnelRepository.findByNom(nom)
                     .orElseThrow(() -> new RuntimeException("Personnel non trouvé"));
         return ResponseEntity.ok(personnel);
+    }
+    
+    @PutMapping("/{id}/deactivate")
+    public ResponseEntity<String> deactivatePersonnel(@PathVariable Long id) {
+        Optional<Personnel> personnelOpt = personnelRepository.findById(id);
+
+        if (personnelOpt.isPresent()) {
+            Personnel personnel = personnelOpt.get();
+            personnel.setActive(false);
+            personnelRepository.save(personnel);
+            return ResponseEntity.ok("Personnel désactivé avec succès !");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Personnel non trouvé !");
+        }
     }
 }
