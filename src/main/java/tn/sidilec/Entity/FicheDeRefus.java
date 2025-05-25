@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+
 @Entity
 
 public class FicheDeRefus {
@@ -106,4 +107,6 @@ public class FicheDeRefus {
 	public void setNumeroFiche(Long numeroFiche) {
 		this.numeroFiche = numeroFiche;
 	}
+	
+
 }

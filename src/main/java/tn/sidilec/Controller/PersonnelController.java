@@ -1,12 +1,15 @@
 package tn.sidilec.Controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import tn.sidilec.Entity.Personnel;
 import tn.sidilec.Entity.Role;
 import tn.sidilec.Repository.PersonnelRepository;
@@ -45,29 +49,45 @@ public class PersonnelController {
         return personnelService.getPersonnelById(id);
     }
     @PostMapping
-    public Personnel addPersonnel(@RequestBody Personnel personnel) {
-       
+    public ResponseEntity<?> addPersonnel(@Valid @RequestBody Personnel personnel, BindingResult result) {
+        Map<String, String> errors = new HashMap<>();
+
+        // ⚠️ Erreurs de validation (notations @Valid)
+        if (result.hasErrors()) {
+            result.getFieldErrors().forEach(error ->
+                errors.put(error.getField(), error.getDefaultMessage())
+            );
+            return ResponseEntity.badRequest().body(errors);
+        }
+
+        // ✔ Vérifier l’unicité de la matricule
         if (personnelRepository.findByMatricule(personnel.getMatricule()).isPresent()) {
-            throw new RuntimeException("Matricule déjà utilisé !");
+            errors.put("matricule", "Matricule déjà utilisé !");
         }
 
-        // Vérifier si le rôle est défini dans la requête. Si non, attribuer RESPONSABLE_RECEPTION par défaut.
+        // ✔ Vérifier l’unicité de l’email
+        if (personnelRepository.findByEmail(personnel.getEmail()).isPresent()) {
+            errors.put("email", "Email déjà utilisé !");
+        }
+
+        // ✔ Vérifier le rôle
         if (personnel.getRole() == null) {
-            throw new RuntimeException("Le rôle doit être spécifié (RESPONSABLE_RECEPTION ou CONTROLEUR)");
+            errors.put("role", "Le rôle doit être spécifié (RESPONSABLE_RECEPTION ou CONTROLEUR)");
+        } else if (!personnel.getRole().equals(Role.RESPONSABLE_RECEPTION) && !personnel.getRole().equals(Role.CONTROLEUR)) {
+            errors.put("role", "Rôle invalide. Le rôle doit être soit 'RESPONSABLE_RECEPTION' soit 'CONTROLEUR'");
         }
 
-        // Vérifier que le rôle spécifié est valide
-        if (!personnel.getRole().equals(Role.RESPONSABLE_RECEPTION) && !personnel.getRole().equals(Role.CONTROLEUR)) {
-            throw new RuntimeException("Rôle invalide. Le rôle doit être soit 'RESPONSABLE_RECEPTION' soit 'CONTROLEUR'.");
+        // ⛔ S'il y a des erreurs, on retourne 400
+        if (!errors.isEmpty()) {
+            return ResponseEntity.badRequest().body(errors);
         }
 
-        // Encoder le mot de passe
+        // 🔐 Encoder le mot de passe
         personnel.setMotDePasse(passwordEncoder.encode(personnel.getMotDePasse()));
 
-        
-        return personnelRepository.save(personnel);
+        // ✅ Sauvegarde
+        return ResponseEntity.ok(personnelRepository.save(personnel));
     }
-
 
     @PutMapping("/{id}")
     public Personnel updatePersonnel(@PathVariable Long id, @RequestBody Personnel personnel) {

@@ -51,22 +51,17 @@ public interface ProduitRepository extends JpaRepository<Produit, Long> {
     
     
     // quantité receptionnée par fournisseur + quantité non conforme 
-    
     @Query("SELECT new tn.sidilec.dto.QuantiteFournisseurDTO(f.nomFournisseur, " +
-            "SUM(DISTINCT bp.quantite), " +
-            "SUM(CASE WHEN c.quantiteIncorrecte IS NOT NULL THEN c.quantiteIncorrecte ELSE 0 END)) " +
-            "FROM BLProduit bp " +
-            "JOIN bp.bl b " +  
-            "JOIN bp.produit p " +
-            "JOIN p.fournisseur f " +
-            "LEFT JOIN Controle c ON c.produit.idProduit = p.idProduit " +
-            "WHERE FUNCTION('STR_TO_DATE', c.dateDeControle, '%Y-%m-%d') BETWEEN :startDate AND :endDate " +
-            "GROUP BY f.nomFournisseur")
+    	       "(SELECT SUM(bp2.quantite) FROM BLProduit bp2 JOIN bp2.produit p2 WHERE p2.fournisseur = f AND bp2.bl.dateReception BETWEEN :startDate AND :endDate), " +
+    	       "(SELECT SUM(COALESCE(fr.quantiteIncorrecte, 0)) FROM FicheDeRefus fr WHERE fr.numBL IN " +
+    	       "(SELECT b2.numBL FROM BL b2 WHERE b2.fournisseur = f AND b2.dateReception BETWEEN :startDate AND :endDate)) " +
+    	       ") " +
+    	       "FROM Fournisseur f " +
+    	       "WHERE EXISTS (SELECT 1 FROM BLProduit bp3 JOIN bp3.produit p3 WHERE p3.fournisseur = f AND bp3.bl.dateReception BETWEEN :startDate AND :endDate) " +
+    	       "OR EXISTS (SELECT 1 FROM FicheDeRefus fr2 WHERE fr2.numBL IN (SELECT b3.numBL FROM BL b3 WHERE b3.fournisseur = f AND b3.dateReception BETWEEN :startDate AND :endDate))")
+    	List<QuantiteFournisseurDTO> findQuantitesParFournisseur(
+    	    @Param("startDate") LocalDate startDate,
+    	    @Param("endDate") LocalDate endDate
+    	);
 
-     List<QuantiteFournisseurDTO> findQuantitesParFournisseur(
-         @Param("startDate") LocalDate startDate,
-         @Param("endDate") LocalDate endDate
-     );
-
-   
 }

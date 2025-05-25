@@ -18,6 +18,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 @Entity
@@ -29,7 +30,7 @@ public class BL {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 	private String numBL;
-    private String dateReception;
+    private LocalDate dateReception;
     private String numClient;
     private String reference; 
     private String referenceInterne; 

@@ -1,5 +1,7 @@
 package tn.sidilec.dto;
 
+import java.time.LocalDate;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -8,7 +10,7 @@ import lombok.Data;
 public class BLProduitDto {
 	private Long blId;
     private String numBL;
-    private String dateReception;
+    private LocalDate dateReception;
     private int quantite;
     private String status;
     private Long idProduit;

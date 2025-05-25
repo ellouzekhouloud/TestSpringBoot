@@ -1,11 +1,12 @@
 package tn.sidilec.Entity;
+import java.time.LocalDate;
 import java.util.List;
 
 public class BLRequest {
 
 	private String numBL;
     private Long idFournisseur;
-    private String dateReception;
+    private LocalDate dateReception;
     private String numClient;
     private String reference;
     private String referenceInterne;
@@ -26,13 +27,15 @@ public class BLRequest {
     public void setIdFournisseur(Long idFournisseur) {
         this.idFournisseur = idFournisseur;
     }
-    public String getDateReception() {
-        return dateReception;
-    }
-    public void setDateReception(String dateReception) {
-        this.dateReception = dateReception;
-    }
-    public String getNumClient() {
+    
+    
+	public LocalDate getDateReception() {
+		return dateReception;
+	}
+	public void setDateReception(LocalDate dateReception) {
+		this.dateReception = dateReception;
+	}
+	public String getNumClient() {
         return numClient;
     }
     public void setNumClient(String numClient) {

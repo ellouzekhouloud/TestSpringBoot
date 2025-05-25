@@ -1,7 +1,11 @@
 package tn.sidilec.Entity;
 
 import jakarta.persistence.*;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import tn.sidilec.Validator.ValidPassword;
+
+
 
 @Entity
 public class Personnel {
@@ -10,19 +14,29 @@ public class Personnel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
+    @NotBlank(message = "Le nom est obligatoire")
     private String nom;
+
+    @NotBlank(message = "Le prénom est obligatoire")
     private String prenom;
-    
+
+    @NotBlank(message = "La matricule est obligatoire")
     @Column(unique = true, nullable = false)
     private String matricule;
-    
+
     private String qualifications;
-    
+
+    @NotBlank(message = "L'email est obligatoire")
+    @Email(message = "Format de l'email invalide (ex: exemple@domaine.com)")
     @Column(unique = true, nullable = false)
     private String email;
-    
+
+    @NotBlank(message = "Le mot de passe est obligatoire")
+    @ValidPassword // ✅ Annotation personnalisée (voir ci-dessous)
     @Column(nullable = false)
     private String motDePasse;
+
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

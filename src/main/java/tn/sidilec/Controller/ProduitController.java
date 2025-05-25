@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -246,6 +247,38 @@ public class ProduitController {
         } catch (MalformedURLException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(null);
+        }
+    }
+
+    @PutMapping("/edit/{id}")
+    public ResponseEntity<?> editProduit(
+        @PathVariable Long id,
+        @RequestBody Produit produit) {
+        
+        // Valider fournisseur et famille (comme dans add)
+        if (produit.getFournisseur() == null || produit.getFournisseur().getIdFournisseur() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : Fournisseur manquant.");
+        }
+        Optional<Fournisseur> fournisseurOpt = fournisseurRepository.findById(produit.getFournisseur().getIdFournisseur());
+        if (!fournisseurOpt.isPresent()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Fournisseur non trouvé.");
+        }
+        produit.setFournisseur(fournisseurOpt.get());
+
+        if (produit.getFamille() == null || produit.getFamille().getIdFamille() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : Famille manquante.");
+        }
+        Optional<Famille> familleOpt = familleRepository.findById(produit.getFamille().getIdFamille());
+        if (!familleOpt.isPresent()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Famille non trouvée.");
+        }
+        produit.setFamille(familleOpt.get());
+
+        try {
+            Produit updatedProduit = produitService.editProduit(id, produit);
+            return ResponseEntity.ok(updatedProduit);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 

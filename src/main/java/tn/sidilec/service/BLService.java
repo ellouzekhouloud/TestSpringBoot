@@ -3,6 +3,7 @@ package tn.sidilec.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import tn.sidilec.Entity.BL;
 import tn.sidilec.Entity.BLProduit;
 import tn.sidilec.Entity.BLRequest;
@@ -42,6 +43,8 @@ public class BLService {
     private NotificationRepository notificationRepository;
     @Autowired
     private WebSocketNotificationService wsNotificationService;
+    
+    
 
     public BL createBL(BLRequest blRequest) {
         // Récupération du fournisseur
@@ -87,8 +90,9 @@ public class BLService {
         notificationRepository.save(notif);
      // ✅ ENVOI TEMPS RÉEL via WebSocket
         wsNotificationService.notifyControleurs(notif.getMessage());
-
+        System.out.println("ID du BL sauvegardé : " + savedBL.getId());
         return savedBL;
+        
     }
     
     
@@ -197,9 +201,12 @@ public class BLService {
     public List<BL> getAllBL() {
         return blRepository.findAll();
     }
+    @Transactional
     public void deleteBL(Long id) {
+    	notificationRepository.deleteByBlId(id);
         blRepository.deleteById(id);
     }
-
+    
+  
 
 }

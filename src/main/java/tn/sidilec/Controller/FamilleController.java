@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,6 +34,11 @@ public class FamilleController {
     @PostMapping
     public Famille addFamille(@RequestBody Famille famille) {
         return familleService.addFamille(famille);
+    }
+    
+    @PutMapping("/{id}")
+    public Famille updateFamille(@PathVariable Long id, @RequestBody Famille updatedFamille) {
+        return familleService.updateFamille(id, updatedFamille);
     }
     
     @DeleteMapping("/{id}")

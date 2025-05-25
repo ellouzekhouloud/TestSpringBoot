@@ -24,6 +24,16 @@ public class FamilleService {
         return familleRepository.save(famille);
     }
     
+    public Famille updateFamille(Long idFamille, Famille updatedFamille) {
+        return familleRepository.findById(idFamille)
+            .map(existingFamille -> {
+                existingFamille.setNomFamille(updatedFamille.getNomFamille());
+                return familleRepository.save(existingFamille);
+            })
+            .orElseThrow(() -> new RuntimeException("Famille non trouvée avec l'id : " + idFamille));
+    }
+
+    
     public void deleteFamille(Long idFamille) {
         familleRepository.deleteById(idFamille);
     }

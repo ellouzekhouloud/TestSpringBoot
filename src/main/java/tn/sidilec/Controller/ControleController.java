@@ -32,12 +32,15 @@ public class ControleController {
     @PostMapping("/enregistrer")
     public ResponseEntity<String> enregistrerControle(@RequestBody Controle controle) {
         try {
+            System.out.println("🟢 Reçu : " + controle); // ou utilise logger
             controleService.enregistrerControle(controle);
             return ResponseEntity.ok("Contrôle enregistré avec succès !");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur lors de l'enregistrement du contrôle: " + e.getMessage());
+            e.printStackTrace(); // pour voir l'erreur complète
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : " + e.getMessage());
         }
     }
+
     
     
    
