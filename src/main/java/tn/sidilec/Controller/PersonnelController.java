@@ -119,4 +119,8 @@ public class PersonnelController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Personnel non trouvé !");
         }
     }
+    @GetMapping("/actifs")
+    public List<Personnel> getActivePersonnels() {
+        return personnelService.getActivePersonnels();
+    }
 }

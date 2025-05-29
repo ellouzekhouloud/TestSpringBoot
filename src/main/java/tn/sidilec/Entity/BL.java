@@ -5,6 +5,7 @@ package tn.sidilec.Entity;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -29,7 +30,10 @@ public class BL {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+	
+	@Column(unique = true)
 	private String numBL;
+	
     private LocalDate dateReception;
     private String numClient;
     private String reference; 

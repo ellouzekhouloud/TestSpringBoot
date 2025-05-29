@@ -23,8 +23,10 @@ public class Produit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idProduit;
-
+    
+    @Column(unique = true, nullable = false)
     private String reference;
+    
     private String nom;
     //private String description;
     //private double prix;

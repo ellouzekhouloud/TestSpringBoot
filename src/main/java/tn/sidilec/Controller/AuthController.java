@@ -60,6 +60,7 @@ public class AuthController {
             response.put("message", "Connexion réussie");
             response.put("role", personnel.get().getRole().toString());
             response.put("nom", personnel.get().getNom());
+            response.put("prenom", personnel.get().getPrenom());
             response.put("accessToken", accessToken);  // Ajouter le JWT dans la réponse
             response.put("refreshToken", refreshToken); // Ajouter le refresh token dans la réponse
             response.put("personnelId", String.valueOf(personnel.get().getId()));

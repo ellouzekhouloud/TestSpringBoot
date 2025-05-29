@@ -25,6 +25,6 @@ public interface BLRepository extends JpaRepository<BL, Long> {
 
 	 List<BL> findByTermineFalse();
 	 
-	 
+	 boolean existsByNumBL(String numBL);
 	
 }

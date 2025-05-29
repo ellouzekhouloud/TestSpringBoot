@@ -2,6 +2,7 @@ package tn.sidilec.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import jakarta.transaction.Transactional;
 import tn.sidilec.Entity.BL;
@@ -26,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
+import org.springframework.http.HttpStatus;
 
 @Service
 public class BLService {
@@ -47,6 +48,14 @@ public class BLService {
     
 
     public BL createBL(BLRequest blRequest) {
+    	
+    	  // Vérifier si le numBL existe déjà
+    	if (blRepository.existsByNumBL(blRequest.getNumBL())) {
+    	    throw new ResponseStatusException(
+    	        HttpStatus.BAD_REQUEST,
+    	        "Ce numéro de bon de livraison existe déjà. Veuillez en saisir un autre."
+    	    );
+    	}
         // Récupération du fournisseur
         Fournisseur fournisseur = fournisseurRepository.findById(blRequest.getIdFournisseur())
                 .orElseThrow(() -> new RuntimeException("Fournisseur introuvable"));
@@ -207,6 +216,7 @@ public class BLService {
         blRepository.deleteById(id);
     }
     
+   
   
 
 }

@@ -43,7 +43,9 @@ public class SecurityConfig {
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers("/auth/login", "/auth/register-admin", "/api/produits/uploadImage",
 								"/api/produits/uploadFicheTechnique", "/api/produits/uploads/{filename:.+}",
-								"/api/produits/ficheTechnique/{filename:.+}", "/images/**", "/fiche_technique/**")
+								"/api/produits/ficheTechnique/{filename:.+}", "/images/**", "/fiche_technique/**","/ws/**", // autoriser les websockets
+						        "/ws-notifications/**",
+						        "/ws")
 						.permitAll()
 					
 						.anyRequest().authenticated())

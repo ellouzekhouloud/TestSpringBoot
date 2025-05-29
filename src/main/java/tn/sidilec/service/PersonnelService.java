@@ -66,4 +66,8 @@ public class PersonnelService {
         }
         personnelRepository.deleteById(id);
     }
+    
+    public List<Personnel> getActivePersonnels() {
+        return personnelRepository.findByIsActiveTrue();
+    }
 }
